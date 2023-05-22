@@ -9,18 +9,22 @@ import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 
 interface InputProps {
     leftIcon: JSX.Element
+    placeholder: string
+    value: string | undefined
+    onChange: (value: any) => void
 }
 
-function InputComponent({ leftIcon, ...rest }: InputProps) {
+function InputComponent({ leftIcon, placeholder, value, onChange, ...rest }: InputProps) {
+
     return (
-        <InputContainer>
+        <InputContainer >
             {leftIcon ? <IconeContainer>{leftIcon}</IconeContainer> : null}
-            <InputText {...rest} />
+            <InputText onChange={onChange} placeholder={placeholder} value={value} {...rest} />
         </InputContainer>
     );
 }
 
-function InputPasswordComponent({ leftIcon, ...rest }: InputProps) {
+function InputPasswordComponent({ leftIcon, placeholder, value, onChange: onChange, ...rest }: InputProps) {
     const [showPassword, setShowPassword] = useState(false);
 
     const handleTogglePassword = () => {
@@ -28,10 +32,10 @@ function InputPasswordComponent({ leftIcon, ...rest }: InputProps) {
     };
 
     return (
-        <InputContainer>
+        <InputContainer >
             {leftIcon ? <IconeContainer>{leftIcon}</IconeContainer> : null}
-            <InputText type={showPassword ? "text" : "password"} {...rest} />
-            <IconButton onClick={handleTogglePassword}>
+            <InputText placeholder={placeholder} value={value} onChange={onChange} type={showPassword ? "text" : "password"} {...rest} />
+            <IconButton type="button" onClick={handleTogglePassword}>
                 {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
             </IconButton>
         </InputContainer>

@@ -6,6 +6,7 @@ export interface ButtonProps {
     onClick: () => void
     variant?: "primary" | "secondary" | "secondaryVariant";
     disabled?: boolean
+    type?: "button" | "submit" | "reset";
 }
 
 interface IconButtonProps {
@@ -14,9 +15,9 @@ interface IconButtonProps {
     disabled?: boolean
 }
 
-function ButtonComponent({ icon = null, title, onClick, variant = "primary", disabled}: ButtonProps) {
+function ButtonComponent({ icon = null, title, onClick, variant = "primary", disabled, type }: ButtonProps) {
     return (
-        <StyledButton variant={variant} onClick={onClick} disabled={disabled}>
+        <StyledButton variant={variant} onClick={onClick} disabled={disabled} type={type}>
             {icon}{title}
         </StyledButton>
     )

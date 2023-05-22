@@ -6,8 +6,12 @@ import {
     Wrapper,
 } from "./styles";
 import Logo from "../../assets/LogoVertical.svg";
+import { useAuth } from "../../context/authContext";
 
 const HomePage = () => {
+
+    const {token} = useAuth()
+    console.log(token)
 
     return (
 

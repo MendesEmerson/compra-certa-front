@@ -1,6 +1,7 @@
 import { BrowserRouter } from "react-router-dom"
 import { GlobalStyle } from "./styles/global"
 import { Routers } from "./Router"
+import { AuthProvider } from "./context/authContext"
 
 
 function App() {
@@ -8,8 +9,10 @@ function App() {
 
   return (
     <BrowserRouter>
-      <GlobalStyle/>
-      <Routers/>
+      <AuthProvider>
+        <GlobalStyle />
+        <Routers />
+      </AuthProvider>
     </BrowserRouter>
   )
 }

@@ -1,11 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { Container, Row, SvgImage } from "./styles";
 import Logo from "../../assets/LogoHorizontal.svg";
-import { MdArrowBack } from "react-icons/md";
+import { MdArrowBack, MdLogout } from "react-icons/md";
 import { useMediaQuery } from "@mui/material";
 import { ButtonComponent, IconButtonComponent } from "../buttonComponent";
+import { useAuth } from "../../context/authContext";
 
-function HeaderComponent({ isLogin = false, backButton = true }) {
+function HeaderComponent({ backButton = true }) {
+
+    const { isLoggedIn, logout } = useAuth()
 
     const isWideScreen = useMediaQuery("(min-width: 650px)");
 
@@ -20,10 +23,14 @@ function HeaderComponent({ isLogin = false, backButton = true }) {
     const handleOnClickBack = () => {
         navigate(-1);
     };
+    const handleOnClickLogout = () => {
+        logout()
+        navigate("/")
+    }
 
     return (
         <Container>
-            {!isLogin ? (
+            {!isLoggedIn ? (
                 <>
                     <Row >
                         <SvgImage src={Logo} alt="Logo" />
@@ -60,7 +67,13 @@ function HeaderComponent({ isLogin = false, backButton = true }) {
                     <Row >
                         <SvgImage src={Logo} alt="Logo" />
                     </Row>
-                    <Row></Row>
+                    <Row>
+                        <ButtonComponent
+                            icon={<MdLogout />}
+                            title={"Logout"}
+                            onClick={handleOnClickLogout}
+                        />
+                    </Row>
                 </>
             )}
         </Container>

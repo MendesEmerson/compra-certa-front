@@ -11,16 +11,13 @@ import {
     TextItemName,
 } from "./styles";
 import { IconButtonComponent } from "../buttonComponent";
+import axios from '../../axiosConfig';
 
 interface ItemListProps {
-    itemId: string
-    itemName: string
-    itemQuantidade: number
-    itemCheck: boolean
-    removeComponent: () => void
-    updateQuantidade: (itemId: string, setQuantidade: number) => void
-    updateCheckbox: (itemID: string, itemCheck: boolean) => void
-
+    itemId: string;
+    itemName: string;
+    itemQuantidade: number;
+    itemCheck: boolean;
 }
 
 function ItemListComponent({
@@ -28,24 +25,48 @@ function ItemListComponent({
     itemName,
     itemQuantidade,
     itemCheck,
-    removeComponent,
-    updateQuantidade,
-    updateCheckbox,
+
 }: ItemListProps) {
+
     const [qtd, setQtd] = useState<number>(itemQuantidade);
     const [check, setCheck] = useState<boolean>(itemCheck);
 
-    const aumentarQtd = () => {
-        setQtd((prevQtd) => prevQtd + 1);
-        updateQuantidade(itemId, qtd + 1);
-    };
-
-    const diminuitQtd = () => {
-        if (qtd > 1) {
-            setQtd((prevQtd) => prevQtd - 1);
-            updateQuantidade(itemId, qtd - 1);
+    const aumentarQtd = async () => {
+        if (qtd >= 1) {
+            try {
+                const response = await axios.put(`/item/${itemId}`, {
+                    quantity: itemQuantidade + 1
+                })
+                if (response.status === 200) {
+                    const newQuantidade = response.data.quantity;
+                    setQtd(newQuantidade);
+                } else {
+                    // Lógica para lidar com erros ou exibir mensagens de erro
+                }
+            } catch (error) {
+                // Lógica para lidar com erros ou exibir mensagens de erro
+            }
         }
     };
+
+    const diminuitQtd = async () => {
+        if (qtd > 1) {
+            try {
+                const response = await axios.put(`/item/${itemId}`, {
+                    quantity: itemQuantidade - 1
+                });
+                if (response.status === 200) {
+                    const newQuantidade = response.data.quantity;
+                    setQtd(newQuantidade);
+                } else {
+                    // Lógica para lidar com erros ou exibir mensagens de erro
+                }
+            } catch (error) {
+                // Lógica para lidar com erros ou exibir mensagens de erro
+            }
+        }
+    };
+
 
     function confirmDelete() {
         confirmAlert({
@@ -54,24 +75,48 @@ function ItemListComponent({
             buttons: [
                 {
                     label: "Sim",
-                    onClick: () => {
-                        removeComponent();
+                    onClick: async () => {
+                        try {
+                            const response = await axios.delete(`/item/${itemId}`);
+                            if (response.status === 200) {
+                                //
+                            } else {
+                                if (response.status === 404) {
+                                    const errorMessage = response.data.message;
+
+                                    console.log(errorMessage)
+                                }
+                            }
+                        } catch (error) {
+                            // Lógica para lidar com erros ou exibir mensagens de erro
+                        }
                     },
+
                 },
                 {
                     label: "Não",
                     onClick: () => {
-                        setQtd(qtd + 1);
-                        updateQuantidade(itemId, qtd + 1);
+                        null
                     },
                 },
             ],
         });
     }
 
-    const marcarItem = () => {
+    const marcarItem = async () => {
         setCheck(!check);
-        updateCheckbox(itemId, !check);
+        try {
+            const response = await axios.put(`/item/${itemId}`, {
+                check: !itemCheck
+            });
+            if (response.status === 200) {
+                const checkUpdate = response.data.check
+                console.log(checkUpdate)
+                setCheck(checkUpdate)
+            }
+        } catch (error) {
+            // 
+        }
     };
 
     return (
